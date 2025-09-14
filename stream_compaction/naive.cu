@@ -17,10 +17,12 @@ namespace StreamCompaction {
             if (index >= n) {
                 return;
             }
-            
-            int offset = 1 << (d - 1);
-            if (index >= offset) {
-                odata[index] = idata[index] + idata[index - offset];
+
+            //round depth 
+            int dOffset = 1 << (d - 1);
+
+            if (index >= dOffset) {
+                odata[index] = idata[index] + idata[index - dOffset];
             } else {
                 odata[index] = idata[index];
             }
