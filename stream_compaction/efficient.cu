@@ -12,23 +12,21 @@ namespace StreamCompaction {
             return timer;
         }
 
-        // for d = 0 to log2n - 1
-        // for all k = 0 to n – 1 by 2^(d+1) in parallel
-        //     x[k + 2^(d+1) – 1] += x[k + 2^d – 1];
-
+        //up sweep
         __global__ void upSweep(int n, int d, int *data) {
             int k = blockIdx.x * blockDim.x + threadIdx.x;
-            if (k < n && k % (1<<(d+1)) == 0) {
+            if (k < n && k % (1 << (d + 1)) == 0) {
                 data[k + (1<<(d+1)) - 1] += data[k + (1<<d) - 1];
             }
         }
 
+        //down sweep
         __global__ void downSweep(int n, int d, int *data) {
             int k = blockIdx.x * blockDim.x + threadIdx.x;
-            if (k < n && k % (1<<(d+1)) == 0) {
-                int temp = data[k + (d<<d) - 1];
-                data[k + (1 << d) - 1] = data[k + (1<<(d+1)) - 1];
-                data[k + (1<<(d+1)) - 1] += temp;
+            if (k < n && k % (1 << (d + 1)) == 0) {
+                int temp = data[k + (1 << d) - 1];
+                data[k + (1 << d) - 1] = data[k + (1 << (d + 1)) - 1];
+                data[k + (1 << (d + 1)) - 1] += temp;
             }
         }
 
@@ -38,25 +36,25 @@ namespace StreamCompaction {
         void scan(int n, int *odata, const int *idata) {
             timer().startGpuTimer();
             
-            int lon2n = 1 << ilog2ceil(n);
+            int log2n = 1 << ilog2ceil(n);
             int *dev_data;
-            cudaMalloc((void**)&dev_data, lon2n * sizeof(int));
-            cudaMemset(dev_data, 0, lon2n * sizeof(int));
+            cudaMalloc((void**)&dev_data, log2n * sizeof(int));
+            cudaMemset(dev_data, 0, log2n * sizeof(int));
             cudaMemcpy(dev_data, idata, n * sizeof(int), cudaMemcpyHostToDevice);
             
             dim3 blockSize(128);
-            dim3 gridSize((lon2n + blockSize.x - 1) / blockSize.x);
+            dim3 gridSize((log2n + blockSize.x - 1) / blockSize.x);
             
             //run Up sweep
-            for (int d = 0; d < ilog2ceil(lon2n); d++) {
-                upSweep<<<gridSize, blockSize>>>(lon2n, d, dev_data);
+            for (int d = 0; d < ilog2ceil(log2n); d++) {
+                upSweep<<<gridSize, blockSize>>>(pow2n, d, dev_data);
             }
             
-            cudaMemset(&dev_data[lon2n - 1], 0, sizeof(int));
+            cudaMemset(&dev_data[log2n - 1], 0, sizeof(int));
             
             //run Down sweep
-            for (int d = ilog2ceil(lon2n) - 1; d >= 0; d--) {
-                downSweep<<<gridSize, blockSize>>>(lon2n, d, dev_data);
+            for (int d = ilog2ceil(log2n) - 1; d >= 0; d--) {
+                downSweep<<<gridSize, blockSize>>>(pow2n, d, dev_data);
             }
             
             cudaMemcpy(odata, dev_data, n * sizeof(int), cudaMemcpyDeviceToHost);
