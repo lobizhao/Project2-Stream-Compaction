@@ -51,7 +51,14 @@ namespace StreamCompaction {
                 std::swap(input, output);
             }
             
-            cudaMemcpy(odata, input, n * sizeof(int), cudaMemcpyDeviceToHost);
+            // Convert inclusive to exclusive scan
+            int *temp = new int[n];
+            cudaMemcpy(temp, input, n * sizeof(int), cudaMemcpyDeviceToHost);
+            odata[0] = 0;
+            for (int i = 1; i < n; i++) {
+                odata[i] = temp[i-1];
+            }
+            delete[] temp;
             
             cudaFree(dev_idata);
             cudaFree(dev_odata);
