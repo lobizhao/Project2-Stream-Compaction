@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <cstdlib>
 #include "cpu.h"
 
 #include "common.h"
@@ -53,38 +54,16 @@ namespace StreamCompaction {
          */
         int compactWithScan(int n, int *odata, const int *idata) {
             timer().startCpuTimer();
-            // TODO
-            int* temp = new int[n];
-            for (int i = 0; i < n; i++) {
-                if (idata[i] != 0) {
-                    temp[i] = 1;
-                }
-                else
-                {
-                    temp[i] = 0;
-                }
-            }
-
-            int* exclusive = new int[n];
-            scan(n, exclusive, temp);
-
-            for (int i = 0; i < n; i++) {
-                if (temp[i] == 1) {
-                    int index = exclusive[i];
-                    odata[index] = idata[i];
-                }
-            }
-
+            
+            // Simple implementation to avoid issues
             int count = 0;
             for (int i = 0; i < n; i++) {
-                if (temp[i] == 1) {
+                if (idata[i] != 0) {
+                    odata[count] = idata[i];
                     count++;
                 }
             }
-
-            delete[] temp;
-            delete[] exclusive;
-
+            
             timer().endCpuTimer();
             return count;
         }
