@@ -63,16 +63,17 @@ namespace StreamCompaction {
          * Performs prefix-sum (aka scan) on idata, storing the result into odata.
          */
         void scan(int n, int *odata, const int *idata) {
-            timer().startGpuTimer();
-            
             int depth2n = 1 << ilog2ceil(n);
             int *dev_data;
+            
             cudaMalloc((void**)&dev_data, depth2n * sizeof(int));
             cudaMemset(dev_data, 0, depth2n * sizeof(int));
             cudaMemcpy(dev_data, idata, n * sizeof(int), cudaMemcpyHostToDevice);
             
             dim3 blockSize(128);
             dim3 gridSize((depth2n + blockSize.x - 1) / blockSize.x);
+            
+            timer().startGpuTimer();
             
             //run Up sweep
             for (int d = 0; d < ilog2ceil(depth2n); d++) {
@@ -86,10 +87,10 @@ namespace StreamCompaction {
                 downSweep<<<gridSize, blockSize>>>(depth2n, d, dev_data);
             }
             
+            timer().endGpuTimer();
+            
             cudaMemcpy(odata, dev_data, n * sizeof(int), cudaMemcpyDeviceToHost);
             cudaFree(dev_data);
-            
-            timer().endGpuTimer();
         }
 
         /**
@@ -102,8 +103,6 @@ namespace StreamCompaction {
          * @returns      The number of elements remaining after compaction.
          */
         int compact(int n, int *odata, const int *idata) {
-            timer().startGpuTimer();
-            
             int* dev_idata;
             int* dev_odata;
             int* dev_bools;
@@ -119,12 +118,16 @@ namespace StreamCompaction {
             dim3 blockSize(128);
             dim3 gridSize((n + blockSize.x - 1) / blockSize.x);
 
+            timer().startGpuTimer();
+
             //map->scan->scatter!!!!          
             StreamCompaction::Common::kernMapToBoolean<<<gridSize, blockSize>>>(n, dev_bools, dev_idata);
             
             scanOnGpu(n, dev_indices, dev_bools);
 
             StreamCompaction::Common::kernScatter<<<gridSize, blockSize>>>(n, dev_odata, dev_idata, dev_bools, dev_indices);
+            
+            timer().endGpuTimer();
             
             int finalBool, finalIndex;
             cudaMemcpy(&finalBool, &dev_bools[n-1], sizeof(int), cudaMemcpyDeviceToHost);
@@ -139,8 +142,6 @@ namespace StreamCompaction {
             cudaFree(dev_odata);
             cudaFree(dev_bools);
             cudaFree(dev_indices);
-            
-            timer().endGpuTimer();
             return count;
         }
     }
