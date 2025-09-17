@@ -9,6 +9,19 @@ CUDA Stream Compaction
 
 ### Questions
 #### analysis
+- block size 128
+
+<table>
+  <tr>
+    <td>![block size 128](img/block128_4.png)</td>
+    <td>![block size 128](img/block128_2.png)</td>
+  </tr>
+</table>
+
+- block size 256
+
+- block size 512
+
 #### output of the test program
 
     Test base on: 
