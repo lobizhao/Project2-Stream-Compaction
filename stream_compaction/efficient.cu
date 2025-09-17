@@ -40,7 +40,7 @@ namespace StreamCompaction {
             cudaMemset(dev_temp, 0, depth2n * sizeof(int));
             cudaMemcpy(dev_temp, dev_idata, n * sizeof(int), cudaMemcpyDeviceToDevice);
             
-            dim3 blockSize(128);
+            dim3 blockSize(BLOCK_SIZE);
             dim3 gridSize((depth2n + blockSize.x - 1) / blockSize.x);
             
             //run Up sweep
@@ -70,7 +70,7 @@ namespace StreamCompaction {
             cudaMemset(dev_data, 0, depth2n * sizeof(int));
             cudaMemcpy(dev_data, idata, n * sizeof(int), cudaMemcpyHostToDevice);
             
-            dim3 blockSize(128);
+            dim3 blockSize(BLOCK_SIZE);
             dim3 gridSize((depth2n + blockSize.x - 1) / blockSize.x);
             
             timer().startGpuTimer();
@@ -115,7 +115,7 @@ namespace StreamCompaction {
             
             cudaMemcpy(dev_idata, idata, n * sizeof(int), cudaMemcpyHostToDevice);
             
-            dim3 blockSize(128);
+            dim3 blockSize(BLOCK_SIZE);
             dim3 gridSize((n + blockSize.x - 1) / blockSize.x);
 
             timer().startGpuTimer();

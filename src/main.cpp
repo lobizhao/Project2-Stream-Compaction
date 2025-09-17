@@ -16,7 +16,7 @@
 #include <stream_compaction/radix.h>
 #include "testing_helpers.hpp"
 
-const int SIZE = 1 << 25; // feel free to change the size of array
+const int SIZE = 1 << 27; // feel free to change the size of array
 //const int SIZE = 1000000;
 //const int SIZE = 1<<25;
 const int NPOT = SIZE - 3; // Non-Power-Of-Two

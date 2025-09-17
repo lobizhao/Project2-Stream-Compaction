@@ -69,7 +69,7 @@ namespace StreamCompaction {
 
             cudaMemcpy(dev_input, idata, n * sizeof(int), cudaMemcpyHostToDevice);
             
-            dim3 blockSize(128);
+            dim3 blockSize(BLOCK_SIZE);
             dim3 gridSize((n + blockSize.x - 1) / blockSize.x);
             
 
