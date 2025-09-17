@@ -31,7 +31,7 @@ inline int ilog2ceil(int x) {
 }
 
 // Global block size for all CUDA kernels
-#define BLOCK_SIZE 128
+#define BLOCK_SIZE 256
 
 namespace StreamCompaction {
     namespace Common {
