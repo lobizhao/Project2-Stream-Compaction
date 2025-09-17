@@ -8,19 +8,42 @@ CUDA Stream Compaction
 * Tested on: Windows 11 Pro, i5-10600KF @ 4.10GHz 32GB, RTX 3080 10GB
 
 ### Questions
+
+**Part 5 Why is My GPU Approach So Slow?**
+
+    At first, I noticed the CPU was actually beating the GPU in my tests. It turns out the problem was too much data being sent back and forth between them.
+
+    So, I optimized my efficient.cu code by rewriting it to keep the data on the GPU as much as possible. The main goal of the fix was to make the whole map -> scan -> scatter process happen entirely on the GPU, so it doesn't have to send anything back to the CPU until the very end.
+
+
+
 #### analysis
-- block size 128
+- block size **128** & const int SIZE: 2^10 - 2^27
 
 <table>
   <tr>
-    <td>![block size 128](img/block128_4.png)</td>
-    <td>![block size 128](img/block128_2.png)</td>
+    <td><img src="img/block128_4.png" alt="block size 128 chart 1"></td>
+    <td><img src="img/block128_2.png" alt="block size 128 chart 2"></td>
   </tr>
 </table>
 
-- block size 256
+- block size **256** & const int SIZE: 2^10 - 2^27
 
-- block size 512
+<table>
+  <tr>
+    <td><img src="img/block256_4.png" alt="block size 128 chart 1"></td>
+    <td><img src="img/block256_2.png" alt="block size 128 chart 2"></td>
+  </tr>
+</table>
+
+- block size **512** & const int SIZE: 2^10 - 2^27
+
+<table>
+  <tr>
+    <td><img src="img/block512_4.png" alt="block size 128 chart 1"></td>
+    <td><img src="img/block512_2.png" alt="block size 128 chart 2"></td>
+  </tr>
+</table>
 
 #### output of the test program
 
