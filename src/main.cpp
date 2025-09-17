@@ -153,30 +153,30 @@ int main(int argc, char* argv[]) {
     printCmpLenResult(count, expectedNPOT, b, c);
 
     //part 6
-    //printf("\n");
-    //printf("*********************\n");
-    //printf("**Part 6: RADIX SORT TESTS **\n");
-    //printf("*********************\n");
+    printf("\n");
+    printf("*********************\n");
+    printf("**Part 6: RADIX SORT TESTS **\n");
+    printf("*********************\n");
 
-    //int *sortInput = new int[SIZE];
-    //int *sortOutput = new int[SIZE];
-    //int *sortExpected = new int[SIZE];
-    //
-    //genArray(SIZE, sortInput, SIZE);
-    //printArray(SIZE, sortInput, true);
-    //
-    //memcpy(sortExpected, sortInput, SIZE * sizeof(int));
-    //std::sort(sortExpected, sortExpected + SIZE);
-    //
-    //printDesc("radix sort");
-    //StreamCompaction::Radix::sort(SIZE, sortOutput, sortInput);
-    //printElapsedTime(StreamCompaction::Radix::timer().getGpuElapsedTimeForPreviousOperation(), "(CUDA Measured)");
-    //printArray(SIZE, sortOutput, true);
-    //printCmpResult(SIZE, sortExpected, sortOutput);
-    //
-    //delete[] sortInput;
-    //delete[] sortOutput;
-    //delete[] sortExpected;
+    int *sortInput = new int[SIZE];
+    int *sortOutput = new int[SIZE];
+    int *sortExpected = new int[SIZE];
+    
+    genArray(SIZE, sortInput, SIZE);
+    printArray(SIZE, sortInput, true);
+    
+    memcpy(sortExpected, sortInput, SIZE * sizeof(int));
+    std::sort(sortExpected, sortExpected + SIZE);
+    
+    printDesc("radix sort");
+    StreamCompaction::Radix::sort(SIZE, sortOutput, sortInput);
+    printElapsedTime(StreamCompaction::Radix::timer().getGpuElapsedTimeForPreviousOperation(), "(CUDA Measured)");
+    printArray(SIZE, sortOutput, true);
+    printCmpResult(SIZE, sortExpected, sortOutput);
+    
+    delete[] sortInput;
+    delete[] sortOutput;
+    delete[] sortExpected;
 
     system("pause"); // stop Win32 console from closing on exit
     delete[] a;

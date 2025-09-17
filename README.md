@@ -232,61 +232,62 @@ Extensive testing was conducted with block sizes of 128, 256, and 512 across arr
     ****************
     ** SCAN TESTS **
     ****************
-        [  12  21  21  42  23  14  19  17  30  20  22   6  30 ...  34   0 ]
+        [   6  13   8  27  25   1   7  15  36  36  29  36   3 ...  22   0 ]
     ==== cpu scan, power-of-two ====
-      elapsed time: 177.057ms    (std::chrono Measured)
-        [   0  12  33  54  96 119 133 152 169 199 219 241 247 ... -1007696300 -1007696266 ]
+      elapsed time: 179.56ms    (std::chrono Measured)
+        [   0   6  19  27  54  79  80  87 102 138 174 203 239 ... -1007732438 -1007732416 ]
     ==== cpu scan, non-power-of-two ====
-      elapsed time: 173.132ms    (std::chrono Measured)
-        [   0  12  33  54  96 119 133 152 169 199 219 241 247 ... -1007696353 -1007696331 ]
+      elapsed time: 178.692ms    (std::chrono Measured)
+        [   0   6  19  27  54  79  80  87 102 138 174 203 239 ... -1007732500 -1007732482 ]
         passed
     ==== naive scan, power-of-two ====
-      elapsed time: 370.462ms    (CUDA Measured)
+      elapsed time: 309.129ms    (CUDA Measured)
         passed
     ==== naive scan, non-power-of-two ====
-      elapsed time: 368.816ms    (CUDA Measured)
+      elapsed time: 320.719ms    (CUDA Measured)
         passed
     ==== work-efficient scan, power-of-two ====
-      elapsed time: 34.597ms    (CUDA Measured)
+      elapsed time: 36.1658ms    (CUDA Measured)
         passed
     ==== work-efficient scan, non-power-of-two ====
-      elapsed time: 34.5502ms    (CUDA Measured)
+      elapsed time: 34.6665ms    (CUDA Measured)
         passed
     ==== thrust scan, power-of-two ====
-      elapsed time: 2.8688ms    (CUDA Measured)
+      elapsed time: 2.53434ms    (CUDA Measured)
         passed
     ==== thrust scan, non-power-of-two ====
-      elapsed time: 2.60506ms    (CUDA Measured)
+      elapsed time: 2.62861ms    (CUDA Measured)
         passed
 
     *****************************
     ** STREAM COMPACTION TESTS **
     *****************************
-        [   3   1   2   1   1   1   3   2   0   2   3   0   1 ...   0   0 ]
+        [   1   3   2   2   2   0   3   2   0   2   2   0   0 ...   2   0 ]
     ==== cpu compact without scan, power-of-two ====
-      elapsed time: 258.332ms    (std::chrono Measured)
-        [   3   1   2   1   1   1   3   2   2   3   1   3   1 ...   3   1 ]
+      elapsed time: 254.969ms    (std::chrono Measured)
+        [   1   3   2   2   2   3   2   2   2   1   3   1   1 ...   1   2 ]
         passed
     ==== cpu compact without scan, non-power-of-two ====
-      elapsed time: 260.264ms    (std::chrono Measured)
-        [   3   1   2   1   1   1   3   2   2   3   1   3   1 ...   2   3 ]
+      elapsed time: 256.657ms    (std::chrono Measured)
+        [   1   3   2   2   2   3   2   2   2   1   3   1   1 ...   3   2 ]
         passed
     ==== cpu compact with scan ====
-      elapsed time: 259.949ms    (std::chrono Measured)
-        [   3   1   2   1   1   1   3   2   2   3   1   3   1 ...   3   1 ]
+      elapsed time: 258.729ms    (std::chrono Measured)
+        [   1   3   2   2   2   3   2   2   2   1   3   1   1 ...   1   2 ]
         passed
     ==== work-efficient compact, power-of-two ====
-      elapsed time: 63.2687ms    (CUDA Measured)
+      elapsed time: 60.2651ms    (CUDA Measured)
         passed
     ==== work-efficient compact, non-power-of-two ====
-      elapsed time: 58.3818ms    (CUDA Measured)
+      elapsed time: 58.545ms    (CUDA Measured)
         passed
 
     *********************
     **Part 6: RADIX SORT TESTS **
     *********************
-        [ 31582 2126 19302 23700 4375 5406 22343 19771 128 2050 11135 31020 29991 ... 10491 20682 ]
+        [ 13679 6248 6835 16480 32541 21321 1676 31392 23863 32686 25994 2145 11785 ... 9024 20682 ]
     ==== radix sort ====
-      elapsed time: 4046.69ms    (CUDA Measured)
+      elapsed time: 3988.84ms    (CUDA Measured)
         [   0   0   0   0   0   0   0   0   0   0   0   0   0 ... 32767 32767 ]
         passed
+
